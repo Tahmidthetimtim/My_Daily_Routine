@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Daily Routine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Style for cells when they are in edit mode */
+        [contenteditable="true"] {
+            background-color: #fef9c3; /* Light yellow */
+            outline: 2px solid #ca8a04; /* Gold outline */
+            border-radius: 4px;
+            cursor: text;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        <!-- Header Section -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900">A Balanced Daily Routine</h1>
+            <p class="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">A structured schedule to balance productivity, relationships, and self-care.</p>
+        </header>
+
+        <!-- Edit/Save Button -->
+        <div class="flex justify-end mb-4">
+            <button id="edit-btn" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700 transition-colors duration-300 shadow-md">
+                Edit Routine
+            </button>
+        </div>
+
+        <!-- Schedule Table Section -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-12">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-4 md:p-6 text-sm font-bold uppercase text-gray-600">Time</th>
+                            <th class="p-4 md:p-6 text-sm font-bold uppercase text-gray-600">Activity</th>
+                            <th class="p-4 md:p-6 text-sm font-bold uppercase text-gray-600">Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body" class="divide-y divide-gray-200">
+                        <!-- Rows will be populated by JS, but we keep them here as a fallback -->
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-4 md:p-6 font-semibold text-indigo-600 whitespace-nowrap">8:00 AM</td>
+                            <td class="p-4 md:p-6 font-medium" data-field="activity">Wake Up & Morning Routine</td>
+                            <td class="p-4 md:p-6 text-gray-600" data-field="notes">Hydrate, light exercise, and plan the day ahead.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-4 md:p-6 font-semibold text-indigo-600 whitespace-nowrap">8:30 AM</td>
+                            <td class="p-4 md:p-6 font-medium" data-field="activity">Breakfast</td>
+                            <td class="p-4 md:p-6 text-gray-600" data-field="notes">A quick and nutritious meal to start the day.</td>
+                        </tr>
+                        <tr class="bg-blue-50 hover:bg-blue-100">
+                            <td class="p-4 md:p-6 font-semibold text-blue-700 whitespace-nowrap">9:00 AM</td>
+                            <td class="p-4 md:p-6 font-bold" data-field="activity">Machine Learning (Part 1)</td>
+                            <td class="p-4 md:p-6 text-blue-800" data-field="notes"><b>(3 hours)</b> Focus on complex topics while your mind is fresh.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-4 md:p-6 font-semibold text-indigo-600 whitespace-nowrap">12:00 PM</td>
+                            <td class="p-4 md:p-6 font-medium" data-field="activity">Lunch Break</td>
+                            <td class="p-4 md:p-6 text-gray-600" data-field="notes">A full hour to disconnect, eat, and recharge.</td>
+                        </tr>
+                        <tr class="bg-blue-50 hover:bg-blue-100">
+                            <td class="p-4 md:p-6 font-semibold text-blue-700 whitespace-nowrap">1:00 PM</td>
+                            <td class="p-4 md:p-6 font-bold" data-field="activity">Machine Learning (Part 2)</td>
+                            <td class="p-4 md:p-6 text-blue-800" data-field="notes"><b>(2 hours)</b> Practical exercises or reviewing lighter material.</td>
+                        </tr>
+                        <tr class="bg-pink-50 hover:bg-pink-100">
+                            <td class="p-4 md:p-6 font-semibold text-pink-700 whitespace-nowrap">3:00 PM</td>
+                            <td class="p-4 md:p-6 font-bold" data-field="activity">Time with Girlfriend (Part 1)</td>
+                            <td class="p-4 md:p-6 text-pink-800" data-field="notes"><b>(1 hour)</b> Connect and relax before your shift starts.</td>
+                        </tr>
+                        <tr class="bg-green-50 hover:bg-green-100">
+                            <td class="p-4 md:p-6 font-semibold text-green-700 whitespace-nowrap">4:00 PM</td>
+                            <td class="p-4 md:p-6 font-bold" data-field="activity">Part-time Job</td>
+                            <td class="p-4 md:p-6 text-green-800" data-field="notes"><b>(5 hours)</b> Focus on your work responsibilities.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-4 md:p-6 font-semibold text-indigo-600 whitespace-nowrap">9:00 PM</td>
+                            <td class="p-4 md:p-6 font-medium" data-field="activity">Dinner & Unwind from Work</td>
+                            <td class="p-4 md:p-6 text-gray-600" data-field="notes">Have a good meal and decompress from the day.</td>
+                        </tr>
+                        <tr class="bg-pink-50 hover:bg-pink-100">
+                            <td class="p-4 md:p-6 font-semibold text-pink-700 whitespace-nowrap">9:30 PM</td>
+                            <td class="p-4 md:p-6 font-bold" data-field="activity">Time with Girlfriend (Part 2)</td>
+                            <td class="p-4 md:p-6 text-pink-800" data-field="notes"><b>(2 hours)</b> Your main block of quality time together.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-4 md:p-6 font-semibold text-indigo-600 whitespace-nowrap">11:30 PM</td>
+                            <td class="p-4 md:p-6 font-medium" data-field="activity">Prepare for Sleep</td>
+                            <td class="p-4 md:p-6 text-gray-600" data-field="notes">No screens. Read a book or listen to calming music.</td>
+                        </tr>
+                        <tr class="bg-gray-800 text-white">
+                            <td class="p-4 md:p-6 font-semibold whitespace-nowrap">12:00 AM</td>
+                            <td class="p-4 md:p-6 font-bold" data-field="activity">Sleep</td>
+                            <td class="p-4 md:p-6" data-field="notes"><b>(8 hours)</b> Crucial for recovery, learning, and overall health.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="text-center mb-10">
+             <h2 class="text-3xl font-bold text-gray-900">Tips for Success</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                <h3 class="font-bold text-lg mb-2">Be Flexible</h3>
+                <p class="text-gray-600">This is a template, not a strict rulebook. Adjust times to fit your energy levels and daily demands.</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                <h3 class="font-bold text-lg mb-2">Meal Prep</h3>
+                <p class="text-gray-600">Preparing meals in advance can save you a lot of time during the week.</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                <h3 class="font-bold text-lg mb-2">Stay Active</h3>
+                <p class="text-gray-600">Even short breaks for stretching or walking can boost your focus and energy.</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                <h3 class="font-bold text-lg mb-2">Protect Your Sleep</h3>
+                <p class="text-gray-600">Avoid screens and heavy meals right before bed to ensure you get a restful 8 hours.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const editBtn = document.getElementById('edit-btn');
+            const scheduleBody = document.getElementById('schedule-body');
+            let isEditMode = false;
+
+            // Function to load routine from localStorage
+            const loadRoutine = () => {
+                const savedRoutine = localStorage.getItem('dailyRoutine');
+                if (savedRoutine) {
+                    const routineData = JSON.parse(savedRoutine);
+                    const rows = scheduleBody.querySelectorAll('tr');
+                    rows.forEach((row, index) => {
+                        if (routineData[index]) {
+                            row.querySelector('[data-field="activity"]').innerHTML = routineData[index].activity;
+                            row.querySelector('[data-field="notes"]').innerHTML = routineData[index].notes;
+                        }
+                    });
+                }
+            };
+
+            // Function to save routine to localStorage
+            const saveRoutine = () => {
+                const rows = scheduleBody.querySelectorAll('tr');
+                const routineData = [];
+                rows.forEach(row => {
+                    const activity = row.querySelector('[data-field="activity"]').innerHTML;
+                    const notes = row.querySelector('[data-field="notes"]').innerHTML;
+                    routineData.push({ activity, notes });
+                });
+                localStorage.setItem('dailyRoutine', JSON.stringify(routineData));
+                
+                // Give user feedback
+                editBtn.textContent = 'Saved!';
+                setTimeout(() => {
+                    editBtn.textContent = 'Edit Routine';
+                }, 1500);
+            };
+
+            // Function to toggle edit mode
+            const toggleEditMode = () => {
+                isEditMode = !isEditMode;
+                const editableCells = scheduleBody.querySelectorAll('[data-field]');
+                
+                if (isEditMode) {
+                    editBtn.textContent = 'Save Routine';
+                    editableCells.forEach(cell => {
+                        cell.contentEditable = true;
+                    });
+                } else {
+                    editableCells.forEach(cell => {
+                        cell.contentEditable = false;
+                    });
+                    saveRoutine();
+                }
+            };
+            
+            // Load the routine when the page loads
+            loadRoutine();
+
+            // Add click event listener to the button
+            editBtn.addEventListener('click', toggleEditMode);
+        });
+    </script>
+</body>
+</html>
+
+
+
